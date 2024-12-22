@@ -49,7 +49,17 @@ $$
 	\end{bmatrix}.
 $$
 
-We evaluate $Cov(R)$ and evaluate the elements
+We evaluate $Cor(R)=$
+$$
+\begin{bmatrix}
+V(T_1(X, X)) & \text{Cov}(T_1(X, X), T_2(X, X)) & \text{Cov}(T_1(X, X), T_1(X, Y)) & \text{Cov}(T_1(X, X), T_2(X, Y)) \\
+             & V(T_2(X, X))                     & \text{Cov}(T_2(X, X), T_1(X, Y)) & \text{Cov}(T_2(X, X), T_2(X, Y)) \\
+             &                                  & V(T_1(X, Y))                     & \text{Cov}(T_1(X, Y), T_2(X, Y)) \\
+             &                                  &                                  & V(T_2(X, Y))
+\end{bmatrix}
+$$
+
+The elements are evaluated as
 $$
 	\begin{aligned}
 		\mathbb{V}\left( T_1(X, X) \right)
@@ -85,6 +95,19 @@ $$
 		Cov(T_1(Y, Y), T_2(Y, Y))
 		 & =
 		8 n \sigma_y^4 +
-		8 \sigma_y^2 T_1(\theta_y, \theta_y)
+		8 \sigma_y^2 T_1(\theta_y, \theta_y) \\
+		% ---
+		Cov(T_1(X, X), T_1(X, Y))
+    &=  \\
+		% ---
+		Cov(T_1(Y, Y), T_1(X, Y))
+    &=  \\
+		% ---
+		Cov(T_1(Y, Y), T_1(X, Y))
+    &=  \\
+		% ---
 	\end{aligned}
 $$
+
+
+
