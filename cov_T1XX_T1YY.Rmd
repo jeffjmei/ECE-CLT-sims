@@ -31,7 +31,7 @@ sim_results <- map(1:10000, ~ {
     exex_hyhy = Tk(ex, ex) * Tk(hy, hy),
     exex_hyey = Tk(ex, ex) * Tk(hy, ey),
     exex_eyey = Tk(ex, ex) * Tk(ey, ey),
-    full_expansion =
+    total =
       Tk(hx, hx) * Tk(hy, hy) +
         2 * Tk(hx, hx) * Tk(hy, ey) +
         Tk(hx, hx) * Tk(ey, ey) +
@@ -52,6 +52,7 @@ hxex_eyey <- map_dbl(sim_results, "hxex_eyey") %>% conf_int()
 exex_hyhy <- map_dbl(sim_results, "exex_hyhy") %>% conf_int()
 exex_hyey <- map_dbl(sim_results, "exex_hyey") %>% conf_int()
 exex_eyey <- map_dbl(sim_results, "exex_eyey") %>% conf_int()
+total <- map_dbl(sim_results, "total") %>% conf_int()
 ```
 
 ## Theory
@@ -65,6 +66,15 @@ hxex_eyey_theory <- 0
 exex_hyhy_theory <- Tk(hy, hy) * 2 * n * sx^2
 exex_hyey_theory <- 0
 exex_eyey_theory <- 4 * n^2 * sx^2 * sy^2
+total_theory <- hxhx_hyhy_theory +
+  2 * hxhx_hyey_theory +
+  hxhx_eyey_theory +
+  2 * hxex_hyhy_theory +
+  4 * hxex_hyey_theory +
+  2 * hxex_eyey_theory +
+  exex_hyhy_theory +
+  2 * exex_hyey_theory +
+  exex_eyey_theory
 ```
 
 ## Unit Test
@@ -107,6 +117,10 @@ test_that("Cov(T1(X, X), T1(Y, Y))", {
   expect_true(
     (exex_eyey_theory >= exex_eyey[1]) &
       (exex_eyey_theory <= exex_eyey[2])
+  )
+  expect_true(
+    (total_theory >= total[1]) &
+      (total_theory <= total[2])
   )
 })
 ```
