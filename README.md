@@ -15,7 +15,7 @@ We want to show that for
 	\begin{bmatrix}
 		X^T A X \\
 		Y^T A Y \\
-		X^T A Y \\
+		X^T A Y 
 	\end{bmatrix},
 	\qquad
 	\mathbb{E}\left(S\right) =
@@ -52,10 +52,12 @@ To show this, we define
 We evaluate $Cor(R)=$
 ```math
 \begin{bmatrix}
-V(T_1(X, X)) & \text{Cov}(T_1(X, X), T_2(X, X)) & \text{Cov}(T_1(X, X), T_1(X, Y)) & \text{Cov}(T_1(X, X), T_2(X, Y)) \\
-             & V(T_2(X, X))                     & \text{Cov}(T_2(X, X), T_1(X, Y)) & \text{Cov}(T_2(X, X), T_2(X, Y)) \\
-             &                                  & V(T_1(X, Y))                     & \text{Cov}(T_1(X, Y), T_2(X, Y)) \\
-             &                                  &                                  & V(T_2(X, Y))
+V(T_1(X, X)) & \text{Cov}(T_1(X, X), T_2(X, X)) & \text{Cov}(T_1(X, X), T_1(Y, Y)) & \text{Cov}(T_1(X, X), T_2(Y, Y)) & \text{Cov}(T_1(X, X), T_1(X, Y)) & \text{Cov}(T_1(X, X), T_2(X, Y)) \\
+             & V(T_2(X, X))                     & \text{Cov}(T_2(X, X), T_1(Y, Y)) & \text{Cov}(T_2(X, X), T_2(Y, Y)) & \text{Cov}(T_2(X, X), T_1(X, Y)) & \text{Cov}(T_2(X, X), T_2(X, Y)) \\
+             &                                  & V(T_1(Y, Y)) & \text{Cov}(T_1(Y, Y), T_2(Y, Y)) & \text{Cov}(T_1(Y, Y), T_1(X, Y)) & \text{Cov}(T_1(Y, Y), T_2(X, Y)) \\
+             &                                  & & V(T_2(Y, Y)) & \text{Cov}(T_2(Y, Y), T_1(X, Y)) & \text{Cov}(T_2(Y, Y), T_2(X, Y)) \\
+             &                                  & & & V(T_1(X, Y))                     & \text{Cov}(T_1(X, Y), T_2(X, Y)) \\
+             &                                  & & &                                  & V(T_2(X, Y))
 \end{bmatrix}
 ```
 
