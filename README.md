@@ -10,7 +10,7 @@ In matrix form, we define
 $$n X^T A Y = 2 T_1(X, Y) - T_2(X, Y). $$
 
 We want to show that for
-$$
+```math
 	S =
 	\begin{bmatrix}
 		X^T A X \\
@@ -24,20 +24,20 @@ $$
 		\sigma_y^2 \\
 		\sigma_{xy}
 	\end{bmatrix},
-$$
+```
 it follows from the central limit theorem that
-$$
+```math
 	S - \mathbb{E}\left(S\right)
 	\xrightarrow{d}
 	N(0, \Sigma_S).
-$$
+```
 
 ---
 
 This result is not trivial since not all of the components are independent. Therefore, we apply the central limit theorem for correlated sequences.
 
 To show this, we define
-$$
+```math
 	R =
 	\begin{bmatrix}
 		T_1(X, X) \\
@@ -47,20 +47,20 @@ $$
 		T_1(X, Y) \\
 		T_2(X, Y)
 	\end{bmatrix}.
-$$
+```
 
 We evaluate $Cor(R)=$
-$$
+```math
 \begin{bmatrix}
 V(T_1(X, X)) & \text{Cov}(T_1(X, X), T_2(X, X)) & \text{Cov}(T_1(X, X), T_1(X, Y)) & \text{Cov}(T_1(X, X), T_2(X, Y)) \\
              & V(T_2(X, X))                     & \text{Cov}(T_2(X, X), T_1(X, Y)) & \text{Cov}(T_2(X, X), T_2(X, Y)) \\
              &                                  & V(T_1(X, Y))                     & \text{Cov}(T_1(X, Y), T_2(X, Y)) \\
              &                                  &                                  & V(T_2(X, Y))
 \end{bmatrix}
-$$
+```
 
 The elements are evaluated as
-$$
+```math
 	\begin{aligned}
 		\mathbb{V}\left( T_1(X, X) \right)
 		 & =
@@ -107,7 +107,7 @@ $$
     &=  \\
 		% ---
 	\end{aligned}
-$$
+```
 
 
 
