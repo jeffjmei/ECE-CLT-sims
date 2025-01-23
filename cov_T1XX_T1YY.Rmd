@@ -55,6 +55,36 @@ exex_eyey <- map_dbl(sim_results, "exex_eyey") %>% conf_int()
 total <- map_dbl(sim_results, "total") %>% conf_int()
 ```
 
+```{R, warning=FALSE, message=FALSE}
+sim_cov <- map(1:100, ~ {
+  sim <- map(1:100, ~ {
+    # Generate Data
+    e <- mvrnorm(n, mu = c(0, 0), Sigma = S)
+    ex <- e[, 1]
+    ey <- e[, 2]
+    X <- hx + ex
+    Y <- hy + ey
+
+    return(
+      list(
+        T1XX = Tk(X, X),
+        T1YY = Tk(Y, Y)
+      )
+    )
+  })
+
+  # Get Covariance
+  T1XX <- map_dbl(sim, "T1XX")
+  T1YY <- map_dbl(sim, "T1YY")
+  return(
+    list(
+      T1XX_T1YY = cov(T1XX, T1YY)
+    )
+  )
+})
+T1XX_T1YY <- map_dbl(sim_cov, "T1XX_T1YY") %>% conf_int()
+```
+
 ## Theory
 ```{R, warning=FALSE, message=FALSE}
 hxhx_hyhy_theory <- Tk(hx, hx) * Tk(hy, hy)
@@ -66,7 +96,7 @@ hxex_eyey_theory <- 0
 exex_hyhy_theory <- Tk(hy, hy) * 2 * n * sx^2
 exex_hyey_theory <- 0
 exex_eyey_theory <- 4 * n^2 * sx^2 * sy^2
-total_theory <- hxhx_hyhy_theory +
+T1XX_T1YY_theory <- hxhx_hyhy_theory +
   2 * hxhx_hyey_theory +
   hxhx_eyey_theory +
   2 * hxex_hyhy_theory +
@@ -121,6 +151,10 @@ test_that("Cov(T1(X, X), T1(Y, Y))", {
   expect_true(
     (total_theory >= total[1]) &
       (total_theory <= total[2])
+  )
+expect_true(
+    (T1XX_T1YY_theory >= T1XX_T1YY[1]) &
+      (T1XX_T1YY_theory <= T1XX_T1YY[2])
   )
 })
 ```
