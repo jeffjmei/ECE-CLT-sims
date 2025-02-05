@@ -1,0 +1,60 @@
+---
+title: $Cov(T_1(X, Y), T_2(X, Y))$
+date: 2025-01-24
+tags: 
+---
+
+```{R, message=FALSE, warning=FALSE}
+source("~/Documents/Research/Code/Simulations/CLT/clt_functions.R")
+source("~/Documents/Research/Code/Simulations/CLT/parameters.R")
+library(tidyverse)
+library(MASS)
+library(testthat)
+```
+
+# $Cov(T_1(X, Y), T_2(X, Y))$
+
+```{R, warning=FALSE, message=FALSE}
+sim_cov <- map(1:100, ~ {
+  sim <- map(1:100, ~ {
+    # Generate Data
+    e <- mvrnorm(n, mu = c(0, 0), Sigma = S)
+    ex <- e[, 1]
+    ey <- e[, 2]
+    X <- hx + ex
+    Y <- hy + ey
+
+    return(
+      list(
+        T1XY = Tk(X, Y, k = 1),
+        T2XY = Tk(X, Y, k = 2)
+      )
+    )
+  })
+
+  # Get Covariance
+  T1XY <- map_dbl(sim, "T1XY")
+  T2XY <- map_dbl(sim, "T2XY")
+  return(
+    list(
+      T1XY_T2XY = cov(T1XY, T2XY)
+    )
+  )
+})
+T1XY_T2XY <- map_dbl(sim_cov, "T1XY_T2XY") %>% conf_int()
+```
+
+```{R, warning=FALSE, message=FALSE}
+# Evaluate Theory
+cov_T1XY_T2XY_theory <- 4 * n * (sx^2 * sy^2 + sxy^2)
+test_that("Variance", {
+  expect_true(
+    (T1XY_T2XY[1] < cov_T1XY_T2XY_theory) &
+      (T1XY_T2XY[2] > cov_T1XY_T2XY_theory)
+  )
+})
+
+# PASS:theory matches empirical simulations
+# - scenario 5: pass
+```
+
