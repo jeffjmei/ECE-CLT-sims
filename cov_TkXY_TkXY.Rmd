@@ -1,0 +1,61 @@
+---
+title: $Cov(T_k(X, Y), T_k(X, Y))$
+date: 2025-02-04
+tags: 
+---
+
+```{R, message=FALSE, warning=FALSE}
+source("~/Documents/Research/Code/Simulations/CLT/clt_functions.R")
+source("~/Documents/Research/Code/Simulations/CLT/parameters.R")
+library(tidyverse)
+library(MASS)
+library(testthat)
+k <- 1
+```
+
+# $Cov(T_k(X, Y), T_k(X, Y))$
+```{R, warning=FALSE, message=FALSE}
+sim_cov <- map(1:100, ~ {
+  sim <- map(1:100, ~ {
+    # Generate Data
+    e <- mvrnorm(n, mu = c(0, 0), Sigma = S)
+    ex <- e[, 1]
+    ey <- e[, 2]
+    X <- hx + ex
+    Y <- hy + ey
+
+    return(
+      list(
+        TkXY = Tk(X, Y, k = k),
+        TkXY = Tk(X, Y, k = k)
+      )
+    )
+  })
+
+  # Get Covariance
+  TkXY <- map_dbl(sim, "TkXY")
+  TkXY <- map_dbl(sim, "TkXY")
+  return(
+    list(
+      TkXY_TkXY = cov(TkXY, TkXY)
+    )
+  )
+})
+TkXY_TkXY <- map_dbl(sim_cov, "TkXY_TkXY") %>% conf_int()
+```
+
+```{R, warning=FALSE, message=FALSE}
+# Evaluate Theory
+cov_TkXX_TkYY_theory <-
+  12 * n * sxy^2 +
+  8 * sxy * k * Tk(hx, hy)
+test_that("Cov(Tk(X, X), Tk(Y, Y))", {
+  expect_true(
+    (TkXX_TkYY[1] < cov_TkXX_TkYY_theory) &
+      (TkXX_TkYY[2] > cov_TkXX_TkYY_theory)
+  )
+})
+
+# FAIL:wait, this is just variance. I've done this before
+```
+
