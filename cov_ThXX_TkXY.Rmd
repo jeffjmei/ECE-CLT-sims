@@ -1,0 +1,63 @@
+---
+title: $Cov(T_k(X, X), T_k(X, Y))$
+date: 2025-02-05
+tags: 
+---
+
+```{R, message=FALSE, warning=FALSE}
+source("~/Documents/Research/Code/Simulations/CLT/clt_functions.R")
+source("~/Documents/Research/Code/Simulations/CLT/parameters.R")
+library(tidyverse)
+library(MASS)
+library(testthat)
+h <- 1
+k <- 2
+```
+
+# $Cov(T_h(X, X), T_k(X, Y))$
+```{R, warning=FALSE, message=FALSE}
+sim_cov <- map(1:100, ~ {
+  sim <- map(1:100, ~ {
+    # Generate Data
+    e <- mvrnorm(n, mu = c(0, 0), Sigma = S)
+    ex <- e[, 1]
+    ey <- e[, 2]
+    X <- hx + ex
+    Y <- hy + ey
+
+    return(
+      list(
+        ThXX = Tk(X, X, k = h),
+        TkXY = Tk(X, Y, k = k)
+      )
+    )
+  })
+
+  # Get Covariance
+  ThXX <- map_dbl(sim, "ThXX")
+  TkXY <- map_dbl(sim, "TkXY")
+  return(
+    list(
+      ThXX_TkXY = cov(ThXX, TkXY)
+    )
+  )
+})
+ThXX_TkXY <- map_dbl(sim_cov, "ThXX_TkXY") %>% conf_int()
+```
+
+```{R, warning=FALSE, message=FALSE}
+# Evaluate Theory
+cov_ThXX_TkXY_theory <-
+  4 * n * (k31 - sx^2 * sxy)
+test_that("Cov(Th(X, X), Tk(X, Y))", {
+  expect_true(
+    (ThXX_TkXY[1] < cov_ThXX_TkXY_theory) &
+      (ThXX_TkXY[2] > cov_ThXX_TkXY_theory)
+  )
+})
+
+# FAIL:when using hyper-flip-flop
+```
+
+
+
