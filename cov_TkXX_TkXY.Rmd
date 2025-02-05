@@ -1,0 +1,62 @@
+---
+title: $Cov(T_k(X, X), T_k(X, Y))$
+date: 2025-02-05
+tags: 
+---
+
+```{R, message=FALSE, warning=FALSE}
+source("~/Documents/Research/Code/Simulations/CLT/clt_functions.R")
+source("~/Documents/Research/Code/Simulations/CLT/parameters.R")
+library(tidyverse)
+library(MASS)
+library(testthat)
+k <- 1
+```
+
+# $Cov(T_k(X, X), T_k(X, Y))$
+```{R, warning=FALSE, message=FALSE}
+sim_cov <- map(1:100, ~ {
+  sim <- map(1:100, ~ {
+    # Generate Data
+    e <- mvrnorm(n, mu = c(0, 0), Sigma = S)
+    ex <- e[, 1]
+    ey <- e[, 2]
+    X <- hx + ex
+    Y <- hy + ey
+
+    return(
+      list(
+        TkXX = Tk(X, X, k = k),
+        TkXY = Tk(X, Y, k = k)
+      )
+    )
+  })
+
+  # Get Covariance
+  TkXX <- map_dbl(sim, "TkXX")
+  TkXY <- map_dbl(sim, "TkXY")
+  return(
+    list(
+      TkXX_TkXY = cov(TkXX, TkXY)
+    )
+  )
+})
+TkXX_TkXY <- map_dbl(sim_cov, "TkXX_TkXY") %>% conf_int()
+```
+
+```{R, warning=FALSE, message=FALSE}
+# Evaluate Theory
+cov_TkXX_TkXY_theory <-
+  4 * sxy * k * Tk(hx) +
+  4 * sx^2 * Tk(hx, hy) +
+  4 * n * k31
+test_that("Cov(Tk(X, X), Tk(X, Y))", {
+  expect_true(
+    (TkXX_TkXY[1] < cov_TkXX_TkXY_theory) &
+      (TkXX_TkXY[2] > cov_TkXX_TkXY_theory)
+  )
+})
+
+# PASS:theoretical values match empirical values
+```
+
