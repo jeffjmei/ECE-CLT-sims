@@ -46,7 +46,11 @@ T1XY_T2XY <- map_dbl(sim_cov, "T1XY_T2XY") %>% conf_int()
 
 ```{R, warning=FALSE, message=FALSE}
 # Evaluate Theory
-cov_T1XY_T2XY_theory <- 4 * n * (sx^2 * sy^2 + sxy^2)
+cov_T1XY_T2XY_theory <-
+  4 * n * (sx^2 * sy^2 * k22 - sxy^2) +
+  2 * sy^2 * Tk(hx) +
+  2 * sx^2 * Tk(hy) + 
+  4 * sxy * Tk(hx, hy)
 test_that("Variance", {
   expect_true(
     (T1XY_T2XY[1] < cov_T1XY_T2XY_theory) &
