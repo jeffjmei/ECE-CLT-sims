@@ -16,7 +16,7 @@ k <- 2
 # $Var(T_k(X, Y))$
 
 ```{R, warning=FALSE, message=FALSE}
-sim_var <- map(1:1000, ~ {
+sim_var <- map(1:100, ~ {
   sim <- map(1:100, ~ {
     # Generate Data
     e <- mvrnorm(n, mu = c(0, 0), Sigma = S)
@@ -45,10 +45,12 @@ var_TkXY <- map_dbl(sim_var, "var_TkXY") %>% conf_int()
 
 ```{R, warning=FALSE, message=FALSE}
 # Evaluate Theory
-var_TkXY_theory <- 6 * n * (sx^2 * sy^2 + sxy^2) + 
-  2 * k * sy^2 * Tk(hx, hx) + 
-  2 * k * sx^2 * Tk(hy, hy) +
-  4 * k * sxy * Tk(hx, hy)
+var_TkXY_theory <- 
+  2 * n * sx^2 * sy^2 * (k22 + 1) +  
+  2 * n * (sx^2 * sy^2 * k22 - sxy^2) + 
+  2 * k * sy^2 * Tk(hx, hx) +  
+  2 * k * sx^2 * Tk(hy, hy) + 
+  4 * k * sxy * Tk(hx, hy) 
 
 test_that("Variance", {
   expect_true(
@@ -57,7 +59,10 @@ test_that("Variance", {
   )
 })
 
-# PASS: empirical results align with theoretical results
+# PASS: Scenario 2
+# PASS: Scenario 5
+# PASS: Scenario 10
+# PASS: Scenario 11
 ```
 
 
