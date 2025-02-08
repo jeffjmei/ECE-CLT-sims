@@ -10,12 +10,12 @@ source("~/Documents/Research/Code/Simulations/CLT/parameters.R")
 library(tidyverse)
 library(MASS)
 library(testthat)
-k <- 1
+k <- 2
 ```
 
 # $Cov(T_k(X, X), T_k(X, Y))$
 ```{R, warning=FALSE, message=FALSE}
-sim_cov <- map(1:100, ~ {
+sim_cov <- map(1:1000, ~ {
   sim <- map(1:100, ~ {
     # Generate Data
     e <- mvrnorm(n, mu = c(0, 0), Sigma = S)
@@ -48,8 +48,8 @@ TkXX_TkXY <- map_dbl(sim_cov, "TkXX_TkXY") %>% conf_int()
 # Evaluate Theory
 cov_TkXX_TkXY_theory <-
   4 * sxy * k * Tk(hx) +
-  4 * sx^2 * Tk(hx, hy) +
-  4 * n * k31
+  4 * sx^2 * k * Tk(hx, hy) +
+  4 * n * sx^3 * sy * k31
 test_that("Cov(Tk(X, X), Tk(X, Y))", {
   expect_true(
     (TkXX_TkXY[1] < cov_TkXX_TkXY_theory) &
@@ -57,6 +57,6 @@ test_that("Cov(Tk(X, X), Tk(X, Y))", {
   )
 })
 
-# PASS:theoretical values match empirical values
+# PASS:correct
 ```
 
