@@ -48,7 +48,10 @@ ThXX_TkXY <- map_dbl(sim_cov, "ThXX_TkXY") %>% conf_int()
 ```{R, warning=FALSE, message=FALSE}
 # Evaluate Theory
 cov_ThXX_TkXY_theory <-
-  4 * n * (k31 - sx^2 * sxy)
+  4 * n * sx^3 * sy * k31 -
+  4 * n * sx^2 * sxy +
+  4 * sxy * Tk(hx) +
+  4 * sx^2 * Tk(hx, hy)
 test_that("Cov(Th(X, X), Tk(X, Y))", {
   expect_true(
     (ThXX_TkXY[1] < cov_ThXX_TkXY_theory) &
@@ -56,8 +59,5 @@ test_that("Cov(Th(X, X), Tk(X, Y))", {
   )
 })
 
-# FAIL:when using hyper-flip-flop
+# PASS:match
 ```
-
-
-
