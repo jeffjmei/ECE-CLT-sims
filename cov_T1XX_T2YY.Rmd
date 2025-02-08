@@ -46,7 +46,8 @@ T1XX_T2YY <- map_dbl(sim_cov, "T1XX_T2YY") %>% conf_int()
 ```{R, warning=FALSE, message=FALSE}
 # Evaluate Theory
 cov_T1XX_T2YY_theory <-
-  4 * n * (2 * sxy^2)
+  4 * n * sx^2 * sy^2 * (k22 - 1) +
+  8 * sxy * Tk(hx, hy)
 test_that("Cov(T1(X, X), T2(Y, Y))", {
   expect_true(
     (T1XX_T2YY[1] < cov_T1XX_T2YY_theory) &
