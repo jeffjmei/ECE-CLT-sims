@@ -32,3 +32,52 @@ test_bound <- function(test_name, true_value, sim_value) {
     )
   })
 }
+
+g <- function(u1, u2, u3, u4, u5, u6) {
+  (2 * u5 - u6) / sqrt((2 * u1 - u2) * (2 * u3 - u4))
+}
+
+var_Tk <- function(n, sx, hx, k = 1) {
+  12 * n * sx^4 + 8 * k * sx^2 * Tk(hx)
+}
+cov_Th_Tk <- function(n, sx, hx, k = 1) {
+  8 * n * sx^4 + 8 * k * sx^2 * Tk(hx)
+}
+cov_Tk_Rk <- function(n, sx, sy, sxy, hx, hy, k = 1) {
+  k22 <- (1 + 2 * (sxy / (sx * sy))^2)
+  4 * n * sx^2 * sy^2 * (k22 - 1) +
+    4 * n * sxy^2 + 8 * sxy * k * Tk(hx, hy)
+}
+cov_Th_Rk <- function(n, sx, sy, sxy, hx, hy, k = 1) {
+  k22 <- (1 + 2 * (sxy / (sx * sy))^2)
+  4 * n * sx^2 * sy^2 * (k22 - 1) +
+    8 * sxy * Tk(hx, hy)
+}
+cov_Tk_Qk <- function(n, sx, sy, sxy, hx, hy, k = 1) {
+  k31 <- 3 * sxy / (sx * sy)
+  4 * sxy * k * Tk(hx) +
+    4 * sx^2 * k * Tk(hx, hy) +
+    4 * n * sx^3 * sy * k31
+}
+cov_Th_Qk <- function(n, sx, sy, sxy, hx, hy, k = 1) {
+  k31 <- 3 * sxy / (sx * sy)
+  4 * n * sx^3 * sy * k31 -
+    4 * n * sx^2 * sxy +
+    4 * sxy * Tk(hx) +
+    4 * sx^2 * Tk(hx, hy)
+}
+cov_Qh_Qk <- function(n, sx, sy, sxy, hx, hy, k = 1) {
+  k22 <- (1 + 2 * (sxy / (sx * sy))^2)
+  4 * n * (sx^2 * sy^2 * k22 - sxy^2) +
+    2 * sy^2 * Tk(hx) +
+    2 * sx^2 * Tk(hy) +
+    4 * sxy * Tk(hx, hy)
+}
+var_Qh <- function(n, sx, sy, sxy, hx, hy, k = 1) {
+  k22 <- (1 + 2 * (sxy / (sx * sy))^2)
+  2 * n * sx^2 * sy^2 * (k22 + 1) +
+    2 * n * (sx^2 * sy^2 * k22 - sxy^2) +
+    2 * k * sy^2 * Tk(hx, hx) +
+    2 * k * sx^2 * Tk(hy, hy) +
+    4 * k * sxy * Tk(hx, hy)
+}
