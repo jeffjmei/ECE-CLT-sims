@@ -37,6 +37,21 @@ g <- function(u1, u2, u3, u4, u5, u6) {
   (2 * u5 - u6) / sqrt((2 * u1 - u2) * (2 * u3 - u4))
 }
 
+dg <- function(u1, u2, u3, u4, u5, u6) {
+  # Theoretical Variance
+  dT1 <- -(2 * u3 - u4) * (2 * u5 - u6) /
+    ((2 * u1 - u2) * (2 * u3 - u4))^(3 / 2)
+  dT2 <- (1 / 2) * (2 * u3 - u4) * (2 * u5 - u6) /
+    ((2 * u1 - u2) * (2 * u3 - u4))^(3 / 2)
+  dR1 <- -(2 * u1 - u2) * (2 * u5 - u6) /
+    ((2 * u1 - u2) * (2 * u3 - u4))^(3 / 2)
+  dR2 <- (1 / 2) * (2 * u1 - u2) * (2 * u5 - u6) /
+    ((2 * u1 - u2) * (2 * u3 - u4))^(3 / 2)
+  dQ1 <- 2 / ((2 * u1 - u2) * (2 * u3 - u4))^(1 / 2)
+  dQ2 <- -1 / ((2 * u1 - u2) * (2 * u3 - u4))^(1 / 2)
+  return(matrix(c(dT1, dT2, dR1, dR2, dQ1, dQ2), ncol = 1))
+}
+
 var_Tk <- function(n, sx, hx, k = 1) {
   12 * n * sx^4 + 8 * k * sx^2 * Tk(hx)
 }
